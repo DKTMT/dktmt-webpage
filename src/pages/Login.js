@@ -1,10 +1,12 @@
 import React from 'react';
 import { Card } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, ConfigProvider } from 'antd';
+import { Checkbox, Form, Input, ConfigProvider } from 'antd';
+import Button from '../components/Button';
 
 const onFinish = (values) => {
     console.log('Success:', values);
+    localStorage.setItem("user_token", "")
 };
 
 const onFinishFailed = (errorInfo) => {
@@ -57,7 +59,7 @@ function Login() {
                                 </a>
                             </Form.Item>
                             <Form.Item>
-                                <Button htmlType='submit' type='primary'> login </Button>
+                                <Button button_name='login'/>
                             </Form.Item>
                         </Form>
                     </div>

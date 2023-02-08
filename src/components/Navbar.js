@@ -28,10 +28,14 @@ const Navbar = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
-    
+    const noNavbarPath = [
+      '/login',
+      '/register'
+    ]
 
     return (
-        <div className="w-full flex justify-center">
+
+        <div className={`w-full flex justify-center ${noNavbarPath.includes(pathname)? 'hidden': ''}`}>
             <div className='flex space-x-8 text-gray-600 m-5 mb-0'>
                 <ConfigProvider
                     theme={{

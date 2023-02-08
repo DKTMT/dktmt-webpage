@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Checkbox, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 
 function Register() {
@@ -54,18 +55,16 @@ function Register() {
                                 />
                             </Form.Item>
                             <Form.Item
-                                name="confirm password"
-                                rules={[{ required: true, message: 'Please input your confirm Password!' }]}
+                                name="email"
+                                rules={[{ required: true, message: 'Please input your Email' }]}
                             >
                                 <Input
-                                    prefix={<LockOutlined className="site-form-item-icon" />}
-                                    type="password"
-                                    placeholder="Confirm Password"
+                                    placeholder="Email"
                                 />
                             </Form.Item>
                             <a></a>
                             <Form.Item>
-                                <Button htmlType='submit'> Register </Button>
+                                <Button button_name='Register'/>
                             </Form.Item>
                         </Form>
                     </div>

@@ -1,7 +1,7 @@
 import react from 'react'
 import Navbar from '../components/Navbar'
 import { Card, Col, Row } from 'antd';
-import PieChart from "../components/Piechart";
+import PieChart from "../components/PiechartSection";
 import LineChart from "../components/LineChart"
 import PromptCard from "../components/PromptCard"
 import PortforlioCard from '../components/PortforlioCard';
