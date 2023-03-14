@@ -4,15 +4,38 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Checkbox, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
+import axios from 'axios'
 
 
 function Register() {
 
+
+    const config = {
+        headers: {
+            'Access-Control-Allow-Origin' : '*',
+        }    
+    }
+
+    const register = (values) => {
+        axios.post('http://localhost:8000/api/auth/register', {
+            name: values.username,
+            email: values.email,
+            password: values.password
+          }, config)
+          .then(function (response) {
+            console.log(response);
+            navigate('/login')
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+
     const navigate = useNavigate()
 
     const onFinish = (values) => {
+        register(values)
         console.log('Success:', values);
-        navigate('/')
     };
 
     const onFinishFailed = (errorInfo) => {

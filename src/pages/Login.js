@@ -3,21 +3,42 @@ import { Card } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Checkbox, Form, Input, ConfigProvider } from 'antd';
 import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
-const onFinish = (values) => {
-    console.log('Success:', values);
-    localStorage.setItem("user_token", "")
-};
-
-const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-};
 
 function Login() {
+
+    const login = (values) => {
+        axios.post('http://localhost:8000/api/auth/login', {
+            email: values.email,
+            password: values.password
+          })
+          .then(function (response) {
+            console.log(response);
+            navigate('/')
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+
+    const navigate = useNavigate()
+
+    const onFinish = (values) => {
+        console.log('Success:', values);
+        login(values)
+        localStorage.setItem("user_token", "")
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
     return (
         <div className="App flex flex-col min-h-screen">
             <div className='h-16 w-full text-end'>
-                <p className='mt-6 mr-10'> Don't have a account yet? Get started here</p>
+                <p className='mt-6 mr-10 cursor-pointer' onClick={() => navigate('/register')}> Don't have a account yet? Get started here</p>
             </div>
             <div className='flex-1 bg-slate-100 flex flex-col'>
                 <div className='flex rounded-3xl mx-60 mt-28 shadow-md overflow-hidden'>
@@ -59,7 +80,7 @@ function Login() {
                                 </a>
                             </Form.Item>
                             <Form.Item>
-                                <Button button_name='login'/>
+                                <Button button_name='login' />
                             </Form.Item>
                         </Form>
                     </div>

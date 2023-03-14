@@ -11,6 +11,7 @@ import Register from './pages/Register'
 import CoinSelect from './pages/CoinSelect'
 import Api from './pages/Api'
 import Navbar from './components/Navbar';
+import Strategy from './pages/Strategy';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/register" element={ <Register /> }/>
         <Route path="/select" element={ <CoinSelect /> }/>
         <Route path="/api" element={ <Api /> }/>
+        <Route path="/startegy" element={ <Strategy/>}/>
       </Routes>
     </BrowserRouter>
     </>

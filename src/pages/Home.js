@@ -5,8 +5,18 @@ import PieChart from "../components/PiechartSection";
 import LineChart from "../components/LineChart"
 import PromptCard from "../components/PromptCard"
 import PortforlioCard from '../components/PortforlioCard';
+import { useEffect, useState } from 'react'
 
 const Home = () => {
+
+    const [user, setUser] = useState('')
+
+    useEffect(() => {
+      const token = localStorage.getItem('user_token')
+      setUser(user)
+    }, [])
+    
+
     return(
       <div className="App flex flex-col min-h-screen">
       <div className='w-full px-36'>
