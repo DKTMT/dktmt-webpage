@@ -10,18 +10,13 @@ import axios from 'axios'
 function Register() {
 
 
-    const config = {
-        headers: {
-            'Access-Control-Allow-Origin' : '*',
-        }    
-    }
 
     const register = (values) => {
         axios.post('http://localhost:8000/api/auth/register', {
             name: values.username,
             email: values.email,
             password: values.password
-          }, config)
+          })
           .then(function (response) {
             console.log(response);
             navigate('/login')

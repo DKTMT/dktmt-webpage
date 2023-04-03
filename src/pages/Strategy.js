@@ -70,10 +70,10 @@ function Strategy() {
             </Button>
             <List
                 itemLayout="horizontal"
-                dataSource={test}
+                dataSource={strategys}
                 className="w-3/6 mt-3"
                 renderItem={(item, index) => (
-                    <List.Item key={index} className="flex flex-row">
+                    <List.Item className="flex flex-row">
                         <p className='mr-4 text-xl'> {index+1 + '.'} </p>
                         <List.Item.Meta
                             title={<a>{item.strategyname}</a>}
