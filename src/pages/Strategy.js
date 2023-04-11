@@ -33,16 +33,13 @@ function Strategy() {
         console.log(body);
         axios.post('http://localhost:8000/api/task/predict/custom-strategy', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
-                console.log(res.status);
+                res.statusCode = 201?   fetchStrategy() : "";
             })
         // setIsModalOpen(false)
     };
 
-    useEffect(() => {
-        const tokenStr = localStorage.getItem('user')
-        axios.get('http://localhost:8000/api/task/predict/strategy', { headers: { "Authorization": `Bearer ${tokenStr}` } })
-            .then(res => {
-            })
+    const fetchStrategy = () => {
+        const tokenStr = localStorage.getItem("user");
         axios.get('http://localhost:8000/api/task/predict/custom-strategy', { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
                 setStrategy(res.data)
@@ -52,9 +49,18 @@ function Strategy() {
                         desc: ele.method['id']
                     }
                 })
-                console.log(data);
             })
 
+    }
+
+    useEffect(() => {
+        const tokenStr = localStorage.getItem('user')
+        axios.get('http://localhost:8000/api/task/predict/strategy', { headers: { "Authorization": `Bearer ${tokenStr}` } })
+            .then(res => {
+                console.log(res.data);
+                setStrategyList(res.data.strategies);
+            })
+        fetchStrategy()
     }, [])
 
     useEffect(() => {
