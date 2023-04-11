@@ -6,19 +6,33 @@ import LineChart from "../components/LineChart"
 import PromptCard from "../components/PromptCard"
 import PortforlioCard from '../components/PortforlioCard';
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const Home = () => {
 
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState({})
+    const [port, setPort] = useState({})
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-      const token = localStorage.getItem('user_token')
-      setUser(user)
+      const tokenStr = localStorage.getItem('user')
+      axios.get("http://localhost:8000/api/auth/validate", { headers: {"Authorization" : `Bearer ${tokenStr}`} })
+      .then(res => {
+        setUser(res.data)
+      })
+      axios.get("http://localhost:8000/api/exchange/binance/port", { headers: {"Authorization" : `Bearer ${tokenStr}`} })
+      .then(res => {
+        setPort(res.data)
+        setLoading(false)
+      })
     }, [])
     
 
     return(
-      <div className="App flex flex-col min-h-screen">
+      <div>
+        {loading? <p> loading.....</p>
+        : 
+        <div className="App flex flex-col min-h-screen">
       <div className='w-full px-36'>
       <div className='flex-1 flex flex-col items-center'>
         <div className='text-center mt-6'>
@@ -30,7 +44,7 @@ const Home = () => {
             <div className='flex flex-row space-x-4'>
               <div className='w-3/5'>
                   <Card className='flex justify-between flex-col'>
-                    <PortforlioCard/>
+                    <PortforlioCard port_value={port.port_value}/>
                   </Card>
                 </div>
                 <div className='w-3/5 space-y-4'>
@@ -46,13 +60,16 @@ const Home = () => {
           </div>
           <div className='w-3/6'>
             <Card className='flex justify-between flex-col'>
-              <PieChart/>
+              <PieChart coins={port.coins_possess} port_value={port.port_value}/>
             </Card>
           </div>
         </div>
+        
       </div>
       </div>
     </div>
+        }
+      </div>
     )
 }
 

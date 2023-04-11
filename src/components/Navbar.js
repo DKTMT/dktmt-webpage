@@ -12,8 +12,8 @@ const items = [
     label: "Overview",
   },
   {
-    key: "/select",
-    label: "Coin",
+    key: "/task",
+    label: "Task",
   },
   {
     key: "/api",

@@ -1,10 +1,13 @@
 import react from 'react'
 
-const PortforlioCard = () => {
+const PortforlioCard = (props) => {
     return(
         <div className='space-y-2 pl-4'>
             <div className='flex justify-between space-x-14'>
-                <p className="font-bold text-4xl"> $1573.69</p>
+                <p className="font-bold text-4xl">{
+                Intl.NumberFormat('en-IN', {
+                    maximumFractionDigits: 2
+                  }).format(props.port_value)}</p>
                 <div className=''>
                 <p className='text-gray-500'> Last Updated</p>
                 <p className='text-gray-500'> 14 days ago </p>
