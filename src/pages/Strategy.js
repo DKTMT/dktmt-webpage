@@ -6,8 +6,8 @@ import { EditOutlined, DeleteOutlined, RightCircleOutlined } from '@ant-design/i
 import Num from '../components/Num'
 import axios from 'axios';
 
-
-const confident_level_list = [{ label: "Very High", level: 4 }, { label: "High", level: 3 }, { label: "Very Medium", level: 2 }, { label: "Low", level: 1 }]
+const confident_level_mapping = { 4: 'Very High', 3: 'High', 2: 'Medium', 1: 'Low'}
+const confident_level_list = [{ label: "Very High", level: 4 }, { label: "High", level: 3 }, { label: "Medium", level: 2 }, { label: "Low", level: 1 }]
 
 function Strategy() {
 
@@ -142,7 +142,7 @@ function Strategy() {
                             key={index}
                         />
                         <div className='flex' key={index+1}>
-                            <div className='w-72'>
+                            <div className='w-72 ml-2'>
                                 {
                                     <p className='Text-lg font-bold'>{item.method.name === "poll" ? "Strategies" : "Chain Order"}</p>
                                 }
@@ -154,7 +154,7 @@ function Strategy() {
                                                     {idx + 1}. {s.strategy}
                                                 </p>
                                                 <p className='text-gray-400'>
-                                                    Confident Level: {s.vote}
+                                                    Confident Level: {confident_level_mapping[s.vote]}
                                                 </p>
                                             </div>
                                         ))
