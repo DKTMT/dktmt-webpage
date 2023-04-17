@@ -275,7 +275,7 @@ function Task() {
             timeframe: values.timeframe,
             exchange: values.exchange,
             mode: values.mode,
-            strategies: values.strategies
+            strategies: values.strategies,
         }
         console.log(body);
         axios.post('http://localhost:8000/api/task/schedule_predict', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
@@ -286,7 +286,7 @@ function Task() {
                 setIsModalOpen(false)
             })
             .catch(err => {
-                messaging('add Ticket failed (Duplicate Ticket name!)', 'error')
+                messaging('add Ticket failed', 'error')
             })
     };
 
@@ -294,7 +294,11 @@ function Task() {
 
     const handleClick = (e) => {
         e.preventDefault()
-        window.location.href = authUrl;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const features = `width=${width},height=${height}`;
+    
+        window.open(authUrl, 'Example', features);
     };
 
     const messaging = (msg, type) => {
@@ -325,8 +329,8 @@ function Task() {
             .then(res => {
                 console.log(res.data.results);
                 if (values.run === 'Prediction') {
-                    const data = Object.keys(res.data.results).map(key => {
-                        return { 'name': key, 'result': res.data.results[key] }
+                    const data = res.data.results.map(strategy => {
+                        return { 'name': strategy.name, 'result': strategy.result, 'key': Math.random() }
                     })
                     console.log(data);
                     messaging('Prediction Task Complete!', 'success')
@@ -335,7 +339,7 @@ function Task() {
                 if (values.run === 'Backtest') {
                     const data = res.data.results.map(strategy => {
                         console.log(strategy);
-                        return { 'name': strategy.name, 'number_of_buy_sell': strategy.number_of_buy_sell, 'accuracy_of_buy_sell': (strategy.accuracy_of_buy_sell * 100).toFixed(2) + '%' }
+                        return { 'name': strategy.name, 'number_of_buy_sell': strategy.number_of_buy_sell, 'accuracy_of_buy_sell': (strategy.accuracy_of_buy_sell * 100).toFixed(2) + '%', 'key': Math.random() }
                     })
                     console.log(data);
                     messaging('Backtest Task Complete!', 'success')
@@ -371,7 +375,7 @@ function Task() {
                             <p className='text-4xl font-bold'> Ticket</p>
                             <p className=' text-gray-500 mb-4'> please register our Line notify here.</p>
                             <div className='flex w-full justify-center space-x-4'>
-                                <Button type="" className='bg-green-500 text-white hover:bg-blue-400 ' onClick={e => handleClick(e)}> Register Line Notify </Button>
+                                <Button type="" className='bg-green-500 text-white hover:bg-green-400 ' onClick={e => handleClick(e)}> Register Line Notify </Button>
                                 <Button type="" className='bg-blue-600 text-white hover:bg-blue-400 ' onClick={showPredictModal}> Run Prediction/Backtest </Button>
                             </div>
                         </div>
@@ -470,7 +474,7 @@ function Task() {
                         </Select>
                     </Form.Item>
                     <Form.Item>
-                        <Button htmlType="submit" className='bg-blue-600 text-white hover:bg-blue-400'>
+                        <Button htmlType="submit" className='bg-blue-600 text-white '>
                             {
                                 loading ? <Spin indicator={antIcon} /> : "Predict"
                             }
@@ -611,7 +615,7 @@ function Task() {
                         </Select>
                     </Form.Item>
                     <Form.Item>
-                        <Button htmlType="submit" className='bg-blue-600 text-white hover:bg-blue-400'>
+                        <Button htmlType="submit" className='bg-blue-600 text-white '>
                             Add Ticket
                         </Button>
                     </Form.Item>

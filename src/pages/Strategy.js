@@ -16,9 +16,9 @@ function Strategy() {
     const [strategys, setStrategy] = useState([])
     const [strategyList, setStrategyList] = useState([])
     const [type, setType] = useState(null)
+    const tokenStr = localStorage.getItem("user");
 
     const onFinish = (values) => {
-        const tokenStr = localStorage.getItem('user')
         console.log('Received values of form:', values);
         console.log(values);
         const chainstrategy = values.strategy_order.map((s) => s.strategy)
@@ -47,7 +47,6 @@ function Strategy() {
     };
 
     const fetchStrategy = () => {
-        const tokenStr = localStorage.getItem("user");
         axios.get('http://localhost:8000/api/predict/strategy/custom', { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
                 setStrategy(res.data.strategies)
@@ -67,7 +66,6 @@ function Strategy() {
     }
 
     useEffect(() => {
-        const tokenStr = localStorage.getItem('user')
         axios.get('http://localhost:8000/api/predict/strategy', { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
                 setStrategyList(res.data.strategies);
@@ -100,7 +98,6 @@ function Strategy() {
     };
 
     const deleteStrategy = (e, id) => {
-        const tokenStr = localStorage.getItem('user')
         e.preventDefault()
         axios.delete(
             "http://localhost:8000/api/predict/strategy/custom"

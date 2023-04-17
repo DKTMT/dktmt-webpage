@@ -11,27 +11,25 @@ import AuthService from '../services/AuthService';
 
 const Home = () => {
 
-  const [user, setUser] = useState({})
   const [port, setPort] = useState({})
   const [loading, setLoading] = useState(true)
   const [hasApi, setHasApi] = useState(false) 
   const antIcon = <LoadingOutlined style={{ fontSize: 150 }} spin />;
+  const tokenStr = localStorage.getItem('user')
 
 
-  useEffect(() => {
-    const tokenStr = localStorage.getItem('user')
-    axios.get("http://localhost:8000/api/auth/validate", { headers: { "Authorization": `Bearer ${tokenStr}` } })
-      .then(res => {
-        setUser(res.data)
-      })
+  const fetchPort = () => {
     axios.get("http://localhost:8000/api/exchange/binance/port", { headers: { "Authorization": `Bearer ${tokenStr}` } })
-      .then(res => {
-        setPort(res.data)
-        setLoading(false)
-      })
+    .then(res => {
+      setPort(res.data)
+      setLoading(false)
+    })
+  }
+  useEffect(() => {
     axios.get("http://localhost:8000/api/exchange/binance/api/validate", { headers: { "Authorization": `Bearer ${tokenStr}` } })
       .then(res => {
         setHasApi(res.data.result == true ? true : false)
+        fetchPort()
       }).catch(error => {
         setHasApi(false)
         setLoading(false)
