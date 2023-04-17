@@ -3,7 +3,7 @@ import { Space, Table, Tag } from 'antd';
 import { Modal, Button } from 'antd';
 import { useState, useEffect, useNavigate } from 'react';
 import { Select } from 'antd';
-import { Form, Input, List, Spin } from 'antd';
+import { Form, Input, List, Spin, message } from 'antd';
 import { LoadingOutlined, DeleteOutlined, PauseOutlined, CaretRightOutlined } from '@ant-design/icons'
 import axios from 'axios'
 
@@ -45,7 +45,7 @@ function Task() {
                     {strategies.map((s, idx) => {
                         return (
                             <div className='flex flex-col' key={Math.random()}>
-                                <p>{idx + 1}. {s.name}</p>
+                                <p>{idx + 1}. {s}</p>
                             </div>
                         );
                     })}
@@ -186,7 +186,13 @@ function Task() {
                 headers: { "Authorization": `Bearer ${tokenStr}` },
                 data: { name: record.name }
             })
-            .then(() => fetchTicket())
+            .then(() => {
+                messaging('Delete ticket: ' + record.name + ' successfully!', 'success')
+                fetchTicket()
+            })
+            .catch(error => {
+                messaging('Delete ticket: ' + record.name + ' failed!', 'error')
+            })
     }
 
     const editTask = (record, action) => {
@@ -196,7 +202,13 @@ function Task() {
             , {
                 headers: { "Authorization": `Bearer ${tokenStr}` }
             })
-            .then(() => fetchTicket())
+            .then(() => {
+                messaging(action + ' ticket: '  + record.name + ' successfully!', 'success')
+                fetchTicket()
+            })
+            .catch(error => {
+                messaging(action + ' ticket: ' + record.name + ' failed!', 'error')
+            })
     }
 
     const fetchTicket = () => {
@@ -251,6 +263,7 @@ function Task() {
     const [loading, setLoading] = useState(false)
     const [predictionResult, setPredictionResult] = useState([])
     const [backtestResult, setBackTestResult] = useState([])
+    const [messageApi, contextHolder] = message.useMessage();
 
     const onFinish = (values) => {
         console.log(values);
@@ -268,8 +281,12 @@ function Task() {
         axios.post('http://localhost:8000/api/task/schedule_predict', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
                 console.log(res.data);
+                messaging('add Ticket successfully', 'success')
                 fetchTicket()
                 setIsModalOpen(false)
+            })
+            .catch(err => {
+                messaging('add Ticket failed (Duplicate Ticket name!)', 'error')
             })
     };
 
@@ -278,6 +295,13 @@ function Task() {
     const handleClick = (e) => {
         e.preventDefault()
         window.location.href = authUrl;
+    };
+
+    const messaging = (msg, type) => {
+        messageApi.open({
+            type: type,
+            content: msg,
+        });
     };
 
     const onPredicitionFinish = (values) => {
@@ -305,13 +329,16 @@ function Task() {
                         return { 'name': key, 'result': res.data.results[key] }
                     })
                     console.log(data);
+                    messaging('Prediction Task Complete!', 'success')
                     setPredictionResult(data)
                 }
                 if (values.run === 'Backtest') {
-                    const data = Object.keys(res.data.results).map(key => {
-                        return { 'name': key, 'number_of_buy_sell': res.data.results[key].number_of_buy_sell, 'accuracy_of_buy_sell': (res.data.results[key].accuracy_of_buy_sell * 100).toFixed(2) + '%' }
+                    const data = res.data.results.map(strategy => {
+                        console.log(strategy);
+                        return { 'name': strategy.name, 'number_of_buy_sell': strategy.number_of_buy_sell, 'accuracy_of_buy_sell': (strategy.accuracy_of_buy_sell * 100).toFixed(2) + '%' }
                     })
                     console.log(data);
+                    messaging('Backtest Task Complete!', 'success')
                     setBackTestResult(data)
                 }
                 setLoading(false)
@@ -319,7 +346,9 @@ function Task() {
             })
             .catch(
                 error => {
+                    console.log(error);
                     setLoading(false)
+                    messaging('Task failed: ' + error, 'error')
                 }
             )
     };
@@ -337,6 +366,7 @@ function Task() {
             {
                 !line ?
                     <div className=''>
+                        {contextHolder}
                         <div className='space-y-5 mt-10 flex flex-col items-center w-full'>
                             <p className='text-4xl font-bold'> Ticket</p>
                             <p className=' text-gray-500 mb-4'> please register our Line notify here.</p>
@@ -349,6 +379,7 @@ function Task() {
 
                     :
                     <div>
+                        {contextHolder}
                         <div className='space-y-5 mt-10 flex flex-col items-center w-full'>
                             <p className='text-4xl font-bold'> Ticket</p>
                             <p className=' text-gray-500 mb-4'> create your notification and place order here.</p>

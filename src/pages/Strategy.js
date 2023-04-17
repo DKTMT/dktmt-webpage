@@ -101,7 +101,6 @@ function Strategy() {
 
     const deleteStrategy = (e, id) => {
         const tokenStr = localStorage.getItem('user')
-        console.log(id);
         e.preventDefault()
         axios.delete(
             "http://localhost:8000/api/predict/strategy/custom"
@@ -111,7 +110,7 @@ function Strategy() {
             })
             .then(() => {
                 fetchStrategy()
-                messaging('Strategy Delete success', 'success')
+                messaging('Strategy Delete successfully!', 'success')
             } )
             .catch(() => messaging('Strategy Delete failed', 'error'))
 
