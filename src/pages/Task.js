@@ -45,7 +45,7 @@ function Task() {
                     {strategies.map((s, idx) => {
                         return (
                             <div className='flex flex-col' key={Math.random()}>
-                                <p>{idx + 1}. {s}</p>
+                                <p>{idx + 1}. {s.name}</p>
                             </div>
                         );
                     })}
@@ -224,7 +224,7 @@ function Task() {
         axios
             .get("http://localhost:8000/api/predict/strategy/custom", { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(response => {
-                setStrategies(response.data)
+                setStrategies(response.data.strategies)
             })
         axios
             .get("http://localhost:8000/api/predict/strategy", { headers: { "Authorization": `Bearer ${tokenStr}` } })
@@ -403,14 +403,14 @@ function Task() {
                         <Select className='' placeholder='Strategy' style={{ width: 300 }} tokenSeparators={[',']} mode="tags" onChange={onhandleChange}>
                             {
                                 strategies.map((s) => (
-                                    <Select.Option value={s.name} key={Math.random()}
+                                    <Select.Option value={s.id} key={Math.random()}
                                     >{s.name}</Select.Option>
                                 ))
                             }
                             {
                                 baseStrategies.map((s) => (
-                                    <Select.Option value={s} key={Math.random()}
-                                    >{s}</Select.Option>
+                                    <Select.Option value={s.id} key={Math.random()}
+                                    >{s.name}</Select.Option>
                                 ))
                             }
                         </Select>
@@ -531,14 +531,14 @@ function Task() {
                         <Select className='' placeholder='Strategy' style={{ width: 300 }} tokenSeparators={[',']} mode="tags" onChange={onhandleChange}>
                             {
                                 strategies.map((s) => (
-                                    <Select.Option value={s.name} key={Math.random()}
+                                    <Select.Option value={s.id} key={Math.random()}
                                     >{s.name}</Select.Option>
                                 ))
                             }
                             {
                                 baseStrategies.map((s) => (
-                                    <Select.Option value={s} key={Math.random()}
-                                    >{s}</Select.Option>
+                                    <Select.Option value={s.id} key={Math.random()}
+                                    >{s.name}</Select.Option>
                                 ))
                             }
                         </Select>

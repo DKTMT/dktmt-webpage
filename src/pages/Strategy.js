@@ -50,8 +50,8 @@ function Strategy() {
         const tokenStr = localStorage.getItem("user");
         axios.get('http://localhost:8000/api/predict/strategy/custom', { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
-                setStrategy(res.data)
-                const data = res.data.map((ele) => {
+                setStrategy(res.data.strategies)
+                const data = res.data.strategies.map((ele) => {
                     if (ele.method.name === 'chain') {
                         return { name: ele.name, desc: ele.method.order }
                     }
@@ -99,15 +99,15 @@ function Strategy() {
         setType(value)
     };
 
-    const deleteStrategy = (e, name) => {
+    const deleteStrategy = (e, id) => {
         const tokenStr = localStorage.getItem('user')
-        console.log(name);
+        console.log(id);
         e.preventDefault()
         axios.delete(
             "http://localhost:8000/api/predict/strategy/custom"
             , {
                 headers: { "Authorization": `Bearer ${tokenStr}` },
-                data: { strategy: name }
+                data: { id: id }
             })
             .then(() => {
                 fetchStrategy()
@@ -174,7 +174,7 @@ function Strategy() {
                             </div>
                             <div className='right-0 mr-4 space-x-4'>
                                 <DeleteOutlined onClick={(e) => {
-                                    deleteStrategy(e, item.name)
+                                    deleteStrategy(e, item.id)
                                 }} />
                             </div>
                         </div>
@@ -221,7 +221,7 @@ function Strategy() {
                                                     <Select className='' placeholder='Strategy' style={{ width: 400 }}>
                                                         {
                                                             strategyList.map((strategy) => (
-                                                                <Select.Option value={strategy} key={Math.random()}>{strategy}</Select.Option>
+                                                                <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
                                                             ))
                                                         }
                                                     </Select>
@@ -270,7 +270,7 @@ function Strategy() {
                                                         <Select className='' placeholder='Strategy' style={{ width: 300 }}>
                                                             {
                                                                 strategyList.map((strategy) => (
-                                                                    <Select.Option value={strategy} key={Math.random()}>{strategy}</Select.Option>
+                                                                    <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
                                                                 ))
                                                             }
                                                         </Select>
