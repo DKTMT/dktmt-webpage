@@ -1,7 +1,8 @@
 import React, { PureComponent, useEffect, useState } from 'react';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import axios from 'axios'
 import { Avatar, List } from 'antd'
+import { cryptoColors } from '../constant';
 
 const PieChartSection = (props) => {
 
@@ -43,9 +44,8 @@ const PieChartSection = (props) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log(props.coins);
     const data = props.coins.map((c) => {
-      return { 'name': c.asset, 'value': c.free_value}
+      return { 'name': c.asset, 'value': c.free_value }
     })
     setCoinsData(data)
   }, [])
@@ -59,11 +59,13 @@ const PieChartSection = (props) => {
           <PieChart>
             <Pie data={coinsData} innerRadius="80%" outerRadius="100%"
               paddingAngle={0}
+              fill={"f7b6d2"}
               dataKey="value" >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
+              {coinsData.map((c, index) => {
+                return <Cell key={`cell-${index}`} fill={cryptoColors[c.name]} />
+              })}
             </Pie>
+            <Tooltip/>
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -74,11 +76,14 @@ const PieChartSection = (props) => {
         renderItem={(coin) => (
           <List.Item className=''>
             <List.Item.Meta
-              avatar={<Avatar src={coin.icon} />}
+              avatar={<Avatar src={coin.icon || "https://p.kindpng.com/picc/s/22-227948_color-gray-hd-png-download.png"} onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src="https://p.kindpng.com/picc/s/22-227948_color-gray-hd-png-download.png";
+              }} />}
               title={<a href="https://ant.design">{coin.asset}</a>}
             />
-            <div className=' flex flex-col '>
-              <p>{((coin.free_value/props.port_value)*100).toFixed(2)} %</p>
+            <div className=' flex flex-col items-end'>
+              <p>{((coin.free_value / props.port_value) * 100).toFixed(2)} %</p>
               <p >{coin.free_value.toFixed(2)} USD</p>
             </div>
           </List.Item>

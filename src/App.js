@@ -3,7 +3,8 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useLocation
+  useLocation,
+  Navigate
 } from "react-router-dom";
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -16,24 +17,53 @@ import Task from './pages/Task'
 
 
 function App() {
-  
+
+  let user
+
+  const ProtectedRoute = ({ children }) => {
+    user = localStorage.getItem('user')
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  };
+
   return (
     <>
-    <BrowserRouter>
-      <Navbar/>
-      <Routes>
-      <Route path="/" element={<Home />} />
-        <Route path="/login" element={ <Login /> }/>
-        <Route path="/register" element={ <Register /> }/>
-        <Route path="/select" element={ <CoinSelect /> }/>
-        <Route path="/api" element={ <Api /> }/>
-        <Route path="/startegy" element={ <Strategy/>}/>
-        <Route path="/task" element={ <Task/>} />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/api" element={
+            <ProtectedRoute user={user}>
+              <Api />
+            </ProtectedRoute>
+
+          } />
+          <Route path="/" element={
+            <ProtectedRoute user={user}>
+              <Home />
+            </ProtectedRoute>
+
+          } />
+          <Route path="/strategy" element={
+            <ProtectedRoute user={user}>
+              <Strategy />
+            </ProtectedRoute>
+
+          } />
+          <Route path="/ticket" element={
+            <ProtectedRoute user={user}>
+              <Task />
+            </ProtectedRoute>
+
+          } />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
 
 export default App;
- 

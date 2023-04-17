@@ -1,42 +1,61 @@
 import React from 'react';
 import { Card } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Checkbox, Form, Input, ConfigProvider } from 'antd';
+import { Checkbox, Form, Input, ConfigProvider, message } from 'antd';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import AuthService from '../services/AuthService';
 
 
 function Login() {
 
+    const navigate = useNavigate()
+    const [messageApi, contextHolder] = message.useMessage();
+
     const login = (values) => {
-        axios.post('http://localhost:8000/api/auth/login', {
+
+        AuthService.login({
             email: values.email,
             password: values.password
+        }).then(function (response) {
+            navigate('/')
         })
-            .then(function (response) {
-                console.log(response);
-                localStorage.setItem("user", response.data.accessToken)
-                navigate('/')
-            })
             .catch(function (error) {
-                console.log(error);
+                errorMessage(error.response.data.detail)
             });
+
+
+        // axios.post('http://localhost:8000/api/auth/login', {
+        //     email: values.email,
+        //     password: values.password
+        // })
+        //     .then(function (response) {
+        //         console.log(response);
+        //         localStorage.setItem("user", response.data.accessToken)
+        //         navigate('/')
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error.response.data.detail);
+        //         errorMessage(error.response.data.detail)
+        //     });
     }
 
-    const navigate = useNavigate()
+    const errorMessage = (errorMsg) => {
+        messageApi.open({
+            type: 'error',
+            content: errorMsg,
+        });
+    };
 
     const onFinish = (values) => {
-        console.log('Success:', values);
         login(values)
     };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
 
     return (
         <div className="App flex flex-col min-h-screen">
+            {contextHolder}
             <div className='h-16 w-full text-end'>
                 <p className='mt-6 mr-10 cursor-pointer' onClick={() => navigate('/register')}> Don't have a account yet? Get started here</p>
             </div>

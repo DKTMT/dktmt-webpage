@@ -5,14 +5,14 @@ import { Checkbox, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import axios from 'axios'
+import AuthService from '../services/AuthService';
 
 
 function Register() {
 
 
-
     const register = (values) => {
-        axios.post('http://localhost:8000/api/auth/register', {
+        AuthService.register({
             name: values.username,
             email: values.email,
             password: values.password
@@ -42,13 +42,13 @@ function Register() {
             <div className='h-16 w-full text-end'>
                 <p className='mt-6 mr-10'> Don't have a account yet? Get started here</p>
             </div>
-            <div className='flex-1 bg-slate-100 flex flex-col'>
-                <div className='flex rounded-3xl mx-60 mt-28 shadow-md overflow-hidden'>
+            <div className='flex-1 bg-slate-100 flex flex-col items-center'>
+                <div className='flex rounded-3xl mt-28 shadow-md overflow-hidden max-w-2xl mx-10 space-x-4 bg-white'>
                     <img src='https://media.discordapp.net/attachments/774576895806406666/1068800055991091210/ezgif-1-9d005465b8.jpg'
                         className='w-1/2'>
                     </img>
 
-                    <div className='w-1/2 pl-16 justify-center bg-white'>
+                    <div className='w-1/2 pl-2 justify-center bg-white'>
                         <Form
                             name="normal_login"
                             className="space-y-10, mt-10 pr-20"

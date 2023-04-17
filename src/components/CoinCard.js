@@ -11,8 +11,8 @@ function CoinCard(props) {
                 {/* <button>
                     select
                 </button> */}
-                <p> {props.percent} 30%</p>
-                <p> {props.aseet} 453 USD</p>
+                <p> {props.percent}</p>
+                <p> {props.aseet} </p>
         </div>
 
     </div>

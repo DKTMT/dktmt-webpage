@@ -12,20 +12,16 @@ const items = [
     label: "Overview",
   },
   {
-    key: "/task",
-    label: "Task",
+    key: "/ticket",
+    label: "Ticket",
   },
   {
     key: "/api",
     label: "API",
   },
   {
-    key: "/startegy",
+    key: "/strategy",
     label: "Strategy",
-  },
-  {
-    key: "/account",
-    label: "Account",
   },
 ];
 
@@ -49,7 +45,6 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    console.log(localStorage.getItem("user"))
   
   }, [])
   
@@ -86,17 +81,17 @@ const Navbar = () => {
           open={open}
           content={
             <div>
-              <p> {localStorage.getItem('user') !== null ?
+              {localStorage.getItem('user') !== null ?
                 <div>
                   <Button className="px-16" onClick={() => logout()}> LOG OUT </Button>
 
                 </div>
                 :
-                <Button className="px-16" onClick={() => login()}> LOG IN </Button>}</p>
+                <Button className="px-16" onClick={() => login()}> LOG IN </Button>}
             </div>
           }
         >
-          <Button type='link' className="flex justify-center" onClick={() => setOpen(!open)}><UserOutlined className="text-black mr-7 text-lg" /></Button>
+          <Button type='link' className="flex justify-center" onClick={() => setOpen(!open)}><UserOutlined className="text-black mr-8 text-lg" /></Button>
         </Popover>
       </div>
     </div>

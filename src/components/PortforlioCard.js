@@ -7,20 +7,20 @@ const PortforlioCard = (props) => {
                 <p className="font-bold text-4xl">{
                 Intl.NumberFormat('en-IN', {
                     maximumFractionDigits: 2
-                  }).format(props.port_value)}</p>
+                  }).format(props.port_value)}$</p>
                 <div className=''>
                 <p className='text-gray-500'> Last Updated</p>
                 <p className='text-gray-500'> 14 days ago </p>
                 </div>
             </div>
             <div className='flex justify-between space-x-14'>
-                <p className='text-xl text-green-500'>+ $0.00</p>
+                <p className='text-xl text-green-500'>+ 0.00$</p>
                 <div className=''>
                 <p className='text-gray-500'> Deposit</p>
                 </div>
             </div>
             <div className='flex justify-between space-x-14'>
-                <p className='text-xl text-red-500'>- $0.00</p>
+                <p className='text-xl text-red-500'>- 0.00$</p>
                 <div className=''>
                 <p className='text-gray-500'> Withdraw</p>
                 </div>
