@@ -204,7 +204,11 @@ function Task() {
             .get("http://localhost:8000/api/task/schedule_predict", { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(response => {
                 console.log(response.data.tickets)
-                setTasks(response.data.tickets)
+                const data = response.data.tickets.map(t => {
+                    return {...t, key: Math.random()}
+                })
+                console.log(data);
+                setTasks(data)
             })
     }
 
