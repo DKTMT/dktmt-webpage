@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Select, Modal, List, } from 'antd';
+import { Button, Form, Input, Space, Select, Modal, List, message } from 'antd';
 import { useState } from 'react';
 import { EditOutlined, DeleteOutlined, RightCircleOutlined } from '@ant-design/icons'
 import Num from '../components/Num'
@@ -37,8 +37,13 @@ function Strategy() {
         axios.post('http://localhost:8000/api/predict/strategy/custom', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
             .then(res => {
                 res.statusCode = 201 ? fetchStrategy() : "";
+                messaging('Strategy Added success', 'success')
+                setIsModalOpen(false)
             })
-        setIsModalOpen(false)
+            .catch(error => {
+                console.log(error);
+                messaging('Strategy Added Failed: Duplicate Strategy Name!!', 'error')
+            })
     };
 
     const fetchStrategy = () => {
@@ -76,6 +81,7 @@ function Strategy() {
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -103,12 +109,24 @@ function Strategy() {
                 headers: { "Authorization": `Bearer ${tokenStr}` },
                 data: { strategy: name }
             })
-            .then(() => fetchStrategy())
+            .then(() => {
+                fetchStrategy()
+                messaging('Strategy Delete success', 'success')
+            } )
+            .catch(() => messaging('Strategy Delete failed', 'error'))
 
     }
 
+    const messaging = (msg, type) => {
+        messageApi.open({
+            type: type,
+            content: msg,
+        });
+    };
+
     return (
         <div className='flex flex-col items-center'>
+            {contextHolder}
             <p className='text-4xl font-bold mt-12'> Strategy</p>
             <p className=' text-gray-500 mb-4'> Let's choose your trading strategy here</p>
             <Button onClick={showModal}>
