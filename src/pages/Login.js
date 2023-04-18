@@ -24,22 +24,15 @@ function Login() {
             .catch(function (error) {
                 errorMessage(error.response.data.detail)
             });
-
-
-        // axios.post('http://localhost:8000/api/auth/login', {
-        //     email: values.email,
-        //     password: values.password
-        // })
-        //     .then(function (response) {
-        //         console.log(response);
-        //         localStorage.setItem("user", response.data.accessToken)
-        //         navigate('/')
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error.response.data.detail);
-        //         errorMessage(error.response.data.detail)
-        //     });
     }
+
+    const validatePassword = (rule, value, callback) => {
+        if (value?.length < 8) {
+          callback("Please input password more than 8 character");
+        } else {
+          callback();
+        }
+      };
 
     const errorMessage = (errorMsg) => {
         messageApi.open({
@@ -82,7 +75,8 @@ function Login() {
                             </Form.Item>
                             <Form.Item
                                 name="password"
-                                rules={[{ required: true, message: 'Please input your Password!' }]}
+                                rules={[{ required: true, message: 'Please input your Password!' },
+                                { validator: validatePassword }]}
                             >
                                 <Input
                                     prefix={<LockOutlined className="site-form-item-icon" />}

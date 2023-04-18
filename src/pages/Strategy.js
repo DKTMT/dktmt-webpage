@@ -51,9 +51,9 @@ function Strategy() {
         console.log('Received values of form:', values);
         console.log(values);
         const params = Object.keys(values).map((key) => {
-            if (key != 'name' && key != 'strategy'){
-                return {name: key, value: values[key]}
-            
+            if (key != 'name' && key != 'strategy') {
+                return { name: key, value: values[key] }
+
             }
         })
         const body = {
@@ -65,7 +65,7 @@ function Strategy() {
             },
             public: true,
             anonymous: true,
-        
+
         }
         console.log(body);
         axios.post('http://localhost:8000/api/predict/strategy/custom', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
@@ -185,7 +185,7 @@ function Strategy() {
                         <div className='flex' key={index + 1}>
                             <div className='w-72 ml-2'>
                                 {
-                                    <p className='Text-lg font-bold'>{item.method.name === "poll" ? "Strategies" : item.method.name === "base" ? "Strategy" :"Chain Order"}</p>
+                                    <p className='Text-lg font-bold'>{item.method.name === "poll" ? "Strategies" : item.method.name === "base" ? "Strategy" : "Chain Order"}</p>
                                 }
                                 {
                                     item.method.name === "poll" ?
@@ -208,14 +208,14 @@ function Strategy() {
                                             :
                                             <div>
                                                 <p>{item.method.strategy}</p>
-                                            
+
                                                 {console.log(item.method.params)}
                                                 <p>custom params</p>
                                                 {
                                                     item.method.params.map((p, idx) => (
-                                                    <p className='text-gray-400' key={Math.random()}>
-                                                        {idx + 1}. param: {p.name} {p.value}
-                                                    </p>
+                                                        <p className='text-gray-400' key={Math.random()}>
+                                                            {idx + 1}. param: {p.name} {p.value}
+                                                        </p>
                                                     ))
                                                 }
                                             </div>
@@ -274,6 +274,11 @@ function Strategy() {
                                                                 <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
                                                             ))
                                                         }
+                                                        {
+                                                            strategys.map((strategy) => (
+                                                                <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
+                                                            ))
+                                                        }
                                                     </Select>
                                                 </Form.Item>
                                                 <MinusCircleOutlined onClick={() => remove(name)} />
@@ -322,6 +327,11 @@ function Strategy() {
                                                         <Select className='' placeholder='Strategy' style={{ width: 300 }}>
                                                             {
                                                                 strategyList.map((strategy) => (
+                                                                    <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
+                                                                ))
+                                                            }
+                                                            {
+                                                                strategys.map((strategy) => (
                                                                     <Select.Option value={strategy.id} key={Math.random()}>{strategy.name}</Select.Option>
                                                                 ))
                                                             }
@@ -394,7 +404,7 @@ function Strategy() {
                                                     rules={[{ required: true, message: 'Please input your strategy ' + p.name }]}
                                                     label={p.label}
                                                 >
-                                                    <InputNumber placeholder={p.default}/>
+                                                    <InputNumber placeholder={p.default} />
                                                 </Form.Item>
                                             )
                                         })
