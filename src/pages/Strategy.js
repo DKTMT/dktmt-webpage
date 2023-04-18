@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Select, Modal, List, message } from 'antd';
+import { Button, Form, Input, Space, Select, Modal, List, message, InputNumber } from 'antd';
 import { useState } from 'react';
 import { EditOutlined, DeleteOutlined, RightCircleOutlined } from '@ant-design/icons'
 import Num from '../components/Num'
 import axios from 'axios';
 
-const confident_level_mapping = { 4: 'Very High', 3: 'High', 2: 'Medium', 1: 'Low'}
+const confident_level_mapping = { 4: 'Very High', 3: 'High', 2: 'Medium', 1: 'Low' }
 const confident_level_list = [{ label: "Very High", level: 4 }, { label: "High", level: 3 }, { label: "Medium", level: 2 }, { label: "Low", level: 1 }]
 
 function Strategy() {
@@ -14,6 +14,7 @@ function Strategy() {
     const [form] = Form.useForm();
 
     const [strategys, setStrategy] = useState([])
+    const [baseStrategyParams, setBaseStrategyParams] = useState([])
     const [strategyList, setStrategyList] = useState([])
     const [type, setType] = useState(null)
     const tokenStr = localStorage.getItem("user");
@@ -45,6 +46,39 @@ function Strategy() {
                 messaging('Strategy Added Failed: Duplicate Strategy Name!!', 'error')
             })
     };
+
+    const onBaseStrategyFinish = (values) => {
+        console.log('Received values of form:', values);
+        console.log(values);
+        const params = Object.keys(values).map((key) => {
+            if (key != 'name' && key != 'strategy'){
+                return {name: key, value: values[key]}
+            
+            }
+        })
+        const body = {
+            name: values.name,
+            method: {
+                name: 'base',
+                strategy: values.strategy,
+                params: params.filter((el) => el !== undefined)
+            },
+            public: true,
+            anonymous: true,
+        
+        }
+        console.log(body);
+        axios.post('http://localhost:8000/api/predict/strategy/custom', body, { headers: { "Authorization": `Bearer ${tokenStr}` } })
+            .then(res => {
+                res.statusCode = 201 ? fetchStrategy() : "";
+                messaging('Strategy Added success', 'success')
+                setIsModalOpen(false)
+            })
+            .catch(error => {
+                console.log(error);
+                messaging('Strategy Added Failed: Duplicate Strategy Name!!', 'error')
+            })
+    }
 
     const fetchStrategy = () => {
         axios.get('http://localhost:8000/api/predict/strategy/custom', { headers: { "Authorization": `Bearer ${tokenStr}` } })
@@ -97,6 +131,13 @@ function Strategy() {
         setType(value)
     };
 
+    const onBaseStrategyChange = (value) => {
+        console.log(value);
+        const strategy = strategyList.find(s => s.id === value)
+        console.log(strategy)
+        setBaseStrategyParams(strategy.params)
+    }
+
     const deleteStrategy = (e, id) => {
         e.preventDefault()
         axios.delete(
@@ -108,7 +149,7 @@ function Strategy() {
             .then(() => {
                 fetchStrategy()
                 messaging('Strategy Delete successfully!', 'success')
-            } )
+            })
             .catch(() => messaging('Strategy Delete failed', 'error'))
 
     }
@@ -141,10 +182,10 @@ function Strategy() {
                             description={<p> type: {item.method.name} </p>}
                             key={index}
                         />
-                        <div className='flex' key={index+1}>
+                        <div className='flex' key={index + 1}>
                             <div className='w-72 ml-2'>
                                 {
-                                    <p className='Text-lg font-bold'>{item.method.name === "poll" ? "Strategies" : "Chain Order"}</p>
+                                    <p className='Text-lg font-bold'>{item.method.name === "poll" ? "Strategies" : item.method.name === "base" ? "Strategy" :"Chain Order"}</p>
                                 }
                                 {
                                     item.method.name === "poll" ?
@@ -165,7 +206,19 @@ function Strategy() {
                                                 </p>
                                             ))
                                             :
-                                            <div></div>
+                                            <div>
+                                                <p>{item.method.strategy}</p>
+                                            
+                                                {console.log(item.method.params)}
+                                                <p>custom params</p>
+                                                {
+                                                    item.method.params.map((p, idx) => (
+                                                    <p className='text-gray-400' key={Math.random()}>
+                                                        {idx + 1}. param: {p.name} {p.value}
+                                                    </p>
+                                                    ))
+                                                }
+                                            </div>
                                 }
                             </div>
                             <div className='right-0 mr-4 space-x-4'>
@@ -188,6 +241,7 @@ function Strategy() {
                 <Select className='' placeholder='Strategy type' style={{ width: 145 }} onChange={handleStrategyChange}>
                     <Select.Option value="chain">Chain</Select.Option>
                     <Select.Option value="poll">Poll</Select.Option>
+                    <Select.Option value="base_strategy">Base Strategy</Select.Option>
                 </Select>
                 {
                     type === "chain" ?
@@ -239,6 +293,8 @@ function Strategy() {
                                 </Button>
                             </Form.Item>
                         </Form>
+
+
                         : type === "poll" ?
                             <Form
                                 name="dynamic_form_nest_item"
@@ -301,8 +357,56 @@ function Strategy() {
                                     </Button>
                                 </Form.Item>
                             </Form>
-                            :
-                            <></>
+                            : type === 'base_strategy' ?
+
+                                <Form
+                                    name="dynamic_form_nest_item"
+                                    onFinish={onBaseStrategyFinish}
+                                    className='mt-4'
+                                    form={form}
+                                >
+                                    <Form.Item
+                                        name="name"
+                                        rules={[{ required: true, message: 'Please input your strategy name' }]}
+                                        label="Name"
+                                    >
+                                        <Input placeholder="strategy name" />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="strategy"
+                                        rules={[{ required: true, message: 'Please input your Base Strategy' }]}
+                                        label="Base strategy"
+                                    >
+                                        <Select className='' placeholder='Strategy' style={{ width: 280 }} onChange={onBaseStrategyChange}>
+                                            {
+                                                strategyList.map((strategy) => (
+                                                    <Select.Option value={strategy.id} key={strategy.id}
+                                                    >{strategy.name}</Select.Option>
+                                                ))
+                                            }
+                                        </Select>
+                                    </Form.Item>
+                                    {
+                                        baseStrategyParams.map(p => {
+                                            return (
+                                                <Form.Item
+                                                    name={p.name}
+                                                    rules={[{ required: true, message: 'Please input your strategy ' + p.name }]}
+                                                    label={p.label}
+                                                >
+                                                    <InputNumber placeholder={p.default}/>
+                                                </Form.Item>
+                                            )
+                                        })
+                                    }
+                                    <Form.Item>
+                                        <Button htmlType="submit">
+                                            Save
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                                :
+                                <></>
                 }
 
             </Modal>
