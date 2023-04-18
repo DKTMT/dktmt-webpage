@@ -26,14 +26,6 @@ function Login() {
             });
     }
 
-    const validatePassword = (rule, value, callback) => {
-        if (value?.length < 8) {
-          callback("Please input password more than 8 character");
-        } else {
-          callback();
-        }
-      };
-
     const errorMessage = (errorMsg) => {
         messageApi.open({
             type: 'error',
@@ -75,8 +67,6 @@ function Login() {
                             </Form.Item>
                             <Form.Item
                                 name="password"
-                                rules={[{ required: true, message: 'Please input your Password!' },
-                                { validator: validatePassword }]}
                             >
                                 <Input
                                     prefix={<LockOutlined className="site-form-item-icon" />}

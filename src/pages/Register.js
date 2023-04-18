@@ -16,14 +16,14 @@ function Register() {
             name: values.username,
             email: values.email,
             password: values.password
-          })
-          .then(function (response) {
-            console.log(response);
-            navigate('/login')
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        })
+            .then(function (response) {
+                console.log(response);
+                navigate('/login')
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const navigate = useNavigate()
@@ -35,6 +35,14 @@ function Register() {
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
+    };
+
+    const validatePassword = (rule, value, callback) => {
+        if (value?.length < 8) {
+            callback("Please input password more than 8 character");
+        } else {
+            callback();
+        }
     };
 
     return (
@@ -62,16 +70,8 @@ function Register() {
                             >
                                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
                             </Form.Item>
-                            <Form.Item
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your Password!' }]}
-                            >
-                                <Input
-                                    prefix={<LockOutlined className="site-form-item-icon" />}
-                                    type="password"
-                                    placeholder="Password"
-                                />
-                            </Form.Item>
+                            rules={[{ required: true, message: 'Please input your Password!' },
+                            { validator: validatePassword }]}
                             <Form.Item
                                 name="email"
                                 rules={[{ required: true, message: 'Please input your Email' }]}
@@ -82,7 +82,7 @@ function Register() {
                             </Form.Item>
                             <a></a>
                             <Form.Item>
-                                <Button button_name='Register'/>
+                                <Button button_name='Register' />
                             </Form.Item>
                         </Form>
                     </div>
