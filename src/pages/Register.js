@@ -1,10 +1,8 @@
 import React from 'react';
-import { Card } from 'antd'
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Checkbox, Form, Input } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import axios from 'axios'
 import AuthService from '../services/AuthService';
 
 
@@ -70,8 +68,15 @@ function Register() {
                             >
                                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
                             </Form.Item>
-                            rules={[{ required: true, message: 'Please input your Password!' },
-                            { validator: validatePassword }]}
+                            <Form.Item
+                                name="password"
+                                rules={[
+                                    { required: true, message: 'Please input your Password!' },
+                                    { validator: validatePassword }
+                                ]}
+                            >
+                                <Input type="password" placeholder="Password" />
+                            </Form.Item>
                             <Form.Item
                                 name="email"
                                 rules={[{ required: true, message: 'Please input your Email' }]}
