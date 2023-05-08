@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
@@ -31,10 +31,6 @@ function Register() {
         console.log('Success:', values);
     };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-
     const validatePassword = (rule, value, callback) => {
         if (value?.length < 8) {
             callback("Please input password more than 8 character");
@@ -50,7 +46,7 @@ function Register() {
             </div>
             <div className='flex-1 bg-slate-100 flex flex-col items-center'>
                 <div className='flex rounded-3xl mt-28 shadow-md overflow-hidden max-w-2xl mx-10 space-x-4 bg-white'>
-                    <img src='https://media.discordapp.net/attachments/774576895806406666/1068800055991091210/ezgif-1-9d005465b8.jpg'
+                    <img alt="" src='https://media.discordapp.net/attachments/774576895806406666/1068800055991091210/ezgif-1-9d005465b8.jpg'
                         className='w-1/2'>
                     </img>
 

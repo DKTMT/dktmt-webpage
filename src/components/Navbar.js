@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Tabs } from "antd";
 import { ConfigProvider, Button, Popover } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import Paragraph from "antd/es/skeleton/Paragraph";
 import { UserOutlined } from "@ant-design/icons";
-import axios from 'axios'
 
 const items = [
   {
-    key: "/",
+    key: "/home",
+    label: "Home",
+  },
+  {
+    key: "/overview",
     label: "Overview",
   },
   {

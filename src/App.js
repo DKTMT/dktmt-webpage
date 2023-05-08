@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   BrowserRouter,
   Routes,
   Route,
-  useLocation,
   Navigate
 } from "react-router-dom";
-import Home from './pages/Home'
+import Overview from './pages/Overview'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import CoinSelect from './pages/CoinSelect'
+import Home from './pages/Home';
 import Api from './pages/Api'
 import Navbar from './components/Navbar';
 import Strategy from './pages/Strategy';
 import Task from './pages/Task'
+import Blog from './pages/Blog'
 
 
 function App() {
@@ -34,19 +34,18 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/api" element={
             <ProtectedRoute user={user}>
               <Api />
             </ProtectedRoute>
-
           } />
-          <Route path="/" element={
+          <Route path="/overview" element={
             <ProtectedRoute user={user}>
-              <Home />
+              <Overview />
             </ProtectedRoute>
-
           } />
           <Route path="/strategy" element={
             <ProtectedRoute user={user}>
@@ -58,7 +57,11 @@ function App() {
             <ProtectedRoute user={user}>
               <Task />
             </ProtectedRoute>
-
+          } />
+          <Route path="/blog" element={
+            <ProtectedRoute user={user}>
+              <Blog />
+            </ProtectedRoute>
           } />
         </Routes>
       </BrowserRouter>
